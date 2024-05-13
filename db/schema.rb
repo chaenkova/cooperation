@@ -38,16 +38,28 @@ ActiveRecord::Schema.define(version: 2024_05_12_143402) do
   create_table "scenes", force: :cascade do |t|
     t.text "sound"
     t.text "mode"
+    t.bigint "background_id"
+    t.bigint "character_id"
+    t.bigint "prev_scene_id"
+    t.bigint "next_scene_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["background_id"], name: "index_scenes_on_background_id"
+    t.index ["character_id"], name: "index_scenes_on_character_id"
+    t.index ["next_scene_id"], name: "index_scenes_on_next_scene_id"
+    t.index ["prev_scene_id"], name: "index_scenes_on_prev_scene_id"
   end
 
   create_table "users", force: :cascade do |t|
-    t.text "current_screen_id"
     t.text "login"
     t.text "password"
+    t.bigint "current_screen_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["current_screen_id"], name: "index_users_on_current_screen_id"
   end
 
+  add_foreign_key "scenes", "scenes", column: "next_scene_id"
+  add_foreign_key "scenes", "scenes", column: "prev_scene_id"
+  add_foreign_key "users", "scenes", column: "current_screen_id"
 end
