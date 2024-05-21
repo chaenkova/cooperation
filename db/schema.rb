@@ -30,9 +30,13 @@ ActiveRecord::Schema.define(version: 2024_05_13_193517) do
   end
 
   create_table "choices", force: :cascade do |t|
-    t.text "choice"
+    t.text "text_choice"
+    t.bigint "scene_id"
+    t.bigint "next_scene_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["next_scene_id"], name: "index_choices_on_next_scene_id"
+    t.index ["scene_id"], name: "index_choices_on_scene_id"
   end
 
   create_table "scenes", force: :cascade do |t|
@@ -40,20 +44,17 @@ ActiveRecord::Schema.define(version: 2024_05_13_193517) do
     t.text "mode"
     t.bigint "background_id"
     t.bigint "character_id"
-    t.bigint "prev_scene_id"
-    t.bigint "next_scene_id"
+    t.boolean "auto_next", default: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["background_id"], name: "index_scenes_on_background_id"
     t.index ["character_id"], name: "index_scenes_on_character_id"
-    t.index ["next_scene_id"], name: "index_scenes_on_next_scene_id"
-    t.index ["prev_scene_id"], name: "index_scenes_on_prev_scene_id"
   end
 
   create_table "users", force: :cascade do |t|
     t.text "login"
     t.text "password"
-    t.bigint "current_screen_id"
+    t.bigint "current_screen_id", default: 1
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "email", default: "", null: false
@@ -66,7 +67,7 @@ ActiveRecord::Schema.define(version: 2024_05_13_193517) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
-  add_foreign_key "scenes", "scenes", column: "next_scene_id"
-  add_foreign_key "scenes", "scenes", column: "prev_scene_id"
+  add_foreign_key "choices", "scenes"
+  add_foreign_key "choices", "scenes", column: "next_scene_id"
   add_foreign_key "users", "scenes", column: "current_screen_id"
 end

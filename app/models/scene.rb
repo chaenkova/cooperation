@@ -1,9 +1,9 @@
 class Scene < ApplicationRecord
   belongs_to :background
-  belongs_to :characters
+  belongs_to :character
   has_many :users
-  belongs_to :prev_scene, class_name: "Scene", optional: true
-  belongs_to :next_scene, class_name: "Scene", optional: true
+  has_many :choices
+
 
   #sound
   #choices

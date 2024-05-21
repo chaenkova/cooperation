@@ -5,8 +5,7 @@ class CreateScenes < ActiveRecord::Migration[6.1]
       t.text :mode
       t.belongs_to :background
       t.belongs_to :character
-      t.references :prev_scene, foreign_key: { to_table: :scenes }
-      t.references :next_scene, foreign_key: { to_table: :scenes }
+      t.boolean :auto_next, default: false
 
       t.timestamps
     end
